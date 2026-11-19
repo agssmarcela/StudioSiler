@@ -1,0 +1,18 @@
+{
+  "name": "bot-studio-siler",
+  "version": "1.0.0",
+  "description": "Bot de agendamento pelo WhatsApp do Studio Siler",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "simular": "node src/simulador.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "@whiskeysockets/baileys": "7.0.0-rc14",
+    "pino": "^10.4.0",
+    "qrcode-terminal": "^0.12.0"
+  }
+}

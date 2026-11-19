@@ -1,0 +1,57 @@
+{
+  "salao": "Studio Siler",
+  "slogan": "beleza e cuidado",
+  "nomeDona": "Julia",
+  "endereco": "Av. Ministro Salgado Filho, 1239 - Soteco, Vila Velha/ES",
+  "fusoHorario": "America/Sao_Paulo",
+
+  "numerosDona": ["5527988009451"],
+
+  "horarios": {
+    "dom": null,
+    "seg": null,
+    "ter": ["07:30", "20:00"],
+    "qua": ["07:30", "20:00"],
+    "qui": ["07:30", "20:00"],
+    "sex": ["07:30", "20:00"],
+    "sab": ["07:30", "20:00"]
+  },
+  "pausas": [["11:30", "13:00"]],
+  "datasFechadas": ["2026-12-25", "2027-01-01"],
+
+  "intervaloMinutos": 30,
+  "atendimentosSimultaneos": 1,
+  "diasAntecedencia": 30,
+  "antecedenciaMinimaHoras": 1,
+
+  "sinalPercentual": 30,
+  "pix": { "chave": "chave-pix-ficticia@exemplo.com", "nome": "Julia (trocar pelo nome real)" },
+  "horasCancelamentoSemPerda": 48,
+
+  "lembreteHorasAntes": 24,
+  "avisarDonaSemConfirmacaoHorasAntes": 3,
+  "lembrarDonaPedidoPendenteMinutos": 60,
+  "minutosAtendimentoHumano": 120,
+  "minutosSessaoInativa": 30,
+
+  "servicos": [
+    { "id": "volume-classico", "categoria": "Cílios", "nome": "Volume clássico (fio a fio)", "rotulo": "2h40 a 3h", "duracao": 180, "preco": 140 },
+    { "id": "volume-brasileiro", "categoria": "Cílios", "nome": "Volume brasileiro", "rotulo": "2h40 a 3h", "duracao": 180, "preco": 140 },
+    { "id": "volume-egipcio", "categoria": "Cílios", "nome": "Volume egípcio", "rotulo": "2h40 a 3h", "duracao": 180, "preco": 140 },
+    { "id": "mega-volume", "categoria": "Cílios", "nome": "Mega volume", "rotulo": "3h a 3h30", "duracao": 210, "preco": 160 },
+    { "id": "efeito-wispy", "categoria": "Cílios", "nome": "Efeito wispy", "rotulo": "2h40 a 3h", "duracao": 180, "preco": 140 },
+    { "id": "manutencao-cilios-1", "categoria": "Cílios", "nome": "Manutenção de cílios (50% ou mais dos fios)", "rotulo": "1h a 1h30", "duracao": 90, "preco": 110 },
+    { "id": "manutencao-cilios-2", "categoria": "Cílios", "nome": "Manutenção de cílios (entre 20% e 50% dos fios)", "rotulo": "1h30 a 2h", "duracao": 120, "preco": 140 },
+    { "id": "manutencao-cilios-3", "categoria": "Cílios", "nome": "Manutenção de cílios (menos de 20% dos fios)", "rotulo": "2h40 a 3h", "duracao": 180, "preco": 140 },
+    { "id": "remocao-cilios", "categoria": "Cílios", "nome": "Remoção de cílios", "rotulo": "30 a 50 min", "duracao": 50, "preco": 60 },
+    { "id": "lash-lifting", "categoria": "Cílios", "nome": "Lash lifting", "rotulo": "1h a 1h10", "duracao": 70, "preco": 80 },
+    { "id": "design-sobrancelhas", "categoria": "Sobrancelhas", "nome": "Design de sobrancelhas", "rotulo": "30 a 40 min", "duracao": 40, "preco": 30 },
+    { "id": "design-henna", "categoria": "Sobrancelhas", "nome": "Design com henna", "rotulo": "40 a 50 min", "duracao": 50, "preco": 40 },
+    { "id": "design-tintura", "categoria": "Sobrancelhas", "nome": "Design com tintura", "rotulo": "40 a 50 min", "duracao": 50, "preco": 40 },
+    { "id": "brow-lamination", "categoria": "Sobrancelhas", "nome": "Brow lamination", "rotulo": "50 min a 1h10", "duracao": 70, "preco": 85 },
+    { "id": "combo-aplicacao-lamination", "categoria": "Combos", "nome": "Aplicação de cílios + Brow lamination", "rotulo": "3h30 a 4h", "duracao": 240, "preco": 200 },
+    { "id": "combo-manutencao-lamination", "categoria": "Combos", "nome": "Manutenção de cílios + Brow lamination", "rotulo": "3h30 a 4h", "duracao": 240, "preco": 170 },
+    { "id": "combo-aplicacao-henna", "categoria": "Combos", "nome": "Aplicação de cílios + Design com henna", "rotulo": "2h40 a 3h20", "duracao": 200, "preco": 155 },
+    { "id": "combo-manutencao-henna", "categoria": "Combos", "nome": "Manutenção de cílios + Design com henna", "rotulo": "cerca de 3h30", "duracao": 210, "preco": 130 }
+  ]
+}
