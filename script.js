@@ -186,7 +186,7 @@ function escolherServico(id){selServ.value=id;S.variante=0;atualiza()}
 $('#aceite').addEventListener('change',e=>{$('#enviar').disabled=!e.target.checked});
 ['nome','tel'].forEach(id=>$('#'+id).addEventListener('input',()=>{$('#e-'+id.replace('tel','tel')).hidden=true;$('#c-'+(id==='nome'?'nome':'tel')).classList.remove('invalido')}));
 
-function msgWA(r){return `Oi, Julia! Fiz o agendamento no site e estou enviando o comprovante do sinal.\nNome: ${r.nome}\nServiço: ${r.servico}\nDia e horário: ${r.quando}\nSinal: ${brl(r.sinal)}`}
+function msgWA(r){const hm=String(Math.floor(r.ini/60)).padStart(2,'0')+':'+String(r.ini%60).padStart(2,'0');return `Oi, Julia! Fiz o agendamento no site e estou enviando o comprovante do sinal.\nNome: ${r.nome}\nServiço: ${r.servico}\nDia e horário: ${r.quando}\nSinal: ${brl(r.sinal)}\nRef: ${r.dia} ${hm} ${r.bloco}min ${r.sid}`}
 $('#wa-outro').href='https://wa.me/'+WA+'?text='+encodeURIComponent('Oi, Julia! Preciso de um horário fora dos que aparecem no site.');
 $('#form').addEventListener('submit',e=>{
   e.preventDefault();
@@ -202,7 +202,7 @@ $('#form').addEventListener('submit',e=>{
   if(!horariosDoDia(new Date(a,m-1,d),sv.block_minutes).includes(S.hora)){$('#e-slot').textContent='Esse horário acabou de ser ocupado. Escolhe outro?';$('#e-slot').hidden=false;pintarCal();pintarHorarios();return}
   const opcoes=$$('[data-op]').map(s=>s.value);
   const quando=String(d).padStart(2,'0')+'/'+String(m).padStart(2,'0')+' às '+hh(S.hora);
-  const r={id:Date.now(),nome,telefone:tel,servico:sv.name+(sv.variante?' ('+sv.variante+')':'')+(opcoes.length?' · '+opcoes.join(' · '):''),dia:S.dia,ini:S.hora,bloco:sv.block_minutes,quando,valor:sv.price_brl,sinal:sv.price_brl*0.3,crianca:$('#crianca').checked,aceite:true,aceite_em:new Date().toISOString(),status:'aguardando_sinal',expira:Date.now()+30*60000};
+  const r={id:Date.now(),sid:sv.id+(sv.variants?'-'+(S.variante+1):''),nome,telefone:tel,servico:sv.name+(sv.variante?' ('+sv.variante+')':'')+(opcoes.length?' · '+opcoes.join(' · '):''),dia:S.dia,ini:S.hora,bloco:sv.block_minutes,quando,valor:sv.price_brl,sinal:sv.price_brl*0.3,crianca:$('#crianca').checked,aceite:true,aceite_em:new Date().toISOString(),status:'aguardando_sinal',expira:Date.now()+30*60000};
   salvarReserva(r);mostrarpix(r);
 });
 function mostrarpix(r){
