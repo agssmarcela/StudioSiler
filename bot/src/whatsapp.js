@@ -1,6 +1,8 @@
 // Conexão com o WhatsApp do salão usando Baileys (WhatsApp Web, login por QR code).
 
 import fs from 'node:fs';
+import path from 'node:path';
+import { exec } from 'node:child_process';
 import makeWASocket, {
   useMultiFileAuthState,
   fetchLatestBaileysVersion,
@@ -16,10 +18,22 @@ import makeWASocket, {
   normalizeMessageContent,
 } from '@whiskeysockets/baileys';
 import qrcode from 'qrcode-terminal';
+import QRCode from 'qrcode';
 import pino from 'pino';
 import { soDigitos } from './telefone.js';
 
 const esperar = (ms) => new Promise((r) => setTimeout(r, ms));
+
+/** Abre um arquivo no navegador/visualizador padrão (Windows, Mac ou Linux com tela). */
+function abrir(arquivo) {
+  const cmd = process.platform === 'win32' ? `start "" "${arquivo}"` : process.platform === 'darwin' ? `open "${arquivo}"` : `xdg-open "${arquivo}"`;
+  exec(cmd, () => {});
+}
+
+const paginaQr = (conteudo, atualizar = true) => `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
+${atualizar ? '<meta http-equiv="refresh" content="3">' : ''}<title>QR code - bot Studio Siler</title>
+<style>body{font-family:sans-serif;background:#FDF8EB;color:#40354B;display:grid;place-items:center;min-height:100vh;margin:0;text-align:center}
+img{width:300px;height:300px;background:#fff;padding:16px;border-radius:12px}</style></head><body><div>${conteudo}</div></body></html>`;
 const numeroDoJid = (jid) => (jid ? jidDecode(jid)?.user ?? null : null);
 
 /** Texto de uma mensagem (conversa, texto com formatação ou legenda de mídia). null se não houver texto. */
@@ -66,13 +80,35 @@ export class WhatsApp {
     this.cacheJid = new Map();
     this.fila = Promise.resolve();
     this.tentativas = 0;
+    this.arquivoQr = path.join(path.dirname(this.pastaAuth), 'qrcode.html');
+    this.qrAberto = false;
+  }
+
+  /** Mostra o QR no terminal e numa página (qrcode.html) que se atualiza sozinha. */
+  async mostrarQr(qr) {
+    this.log.info('\n📱 Escaneie o QR code com o WhatsApp do salão (Dispositivos conectados > Conectar dispositivo):\n');
+    qrcode.generate(qr, { small: true });
+    try {
+      const img = await QRCode.toDataURL(qr, { margin: 1, width: 300 });
+      fs.writeFileSync(this.arquivoQr, paginaQr(
+        `<h2>Bot Studio Siler</h2><p>No celular do salão: <b>WhatsApp → Dispositivos conectados → Conectar dispositivo</b></p>` +
+        `<img src="${img}" alt="QR code"><p><small>O código muda a cada ~20 segundos; esta página se atualiza sozinha.</small></p>`));
+      this.log.info(`   Se o QR acima estiver ilegível, abra o arquivo: ${this.arquivoQr}\n`);
+      if (!this.qrAberto && !process.env.SEM_NAVEGADOR) {
+        this.qrAberto = true;
+        abrir(this.arquivoQr);
+      }
+    } catch (e) {
+      this.log.warn('Não consegui salvar o QR como página:', e.message);
+    }
   }
 
   async iniciar() {
     const { state, saveCreds } = await useMultiFileAuthState(this.pastaAuth);
+    this.log.info('⏳ Conectando ao WhatsApp...');
     let version;
     try {
-      ({ version } = await fetchLatestBaileysVersion());
+      ({ version } = await fetchLatestBaileysVersion({ signal: AbortSignal.timeout(8000) }));
     } catch {
       /* usa a versão padrão da biblioteca */
     }
@@ -102,14 +138,14 @@ export class WhatsApp {
     }
 
     sock.ev.on('connection.update', async ({ connection, lastDisconnect, qr }) => {
-      if (qr && !this.numeroSalao) {
-        this.log.info('\n📱 Escaneie o QR code com o WhatsApp do salão (Dispositivos conectados > Conectar dispositivo):\n');
-        qrcode.generate(qr, { small: true });
-      }
+      if (qr && !this.numeroSalao) await this.mostrarQr(qr);
       if (connection === 'open') {
         this.conectado = true;
         this.tentativas = 0;
         this.log.info('✅ Conectado ao WhatsApp!');
+        if (fs.existsSync(this.arquivoQr)) {
+          fs.writeFileSync(this.arquivoQr, paginaQr('<h2>✅ Conectado!</h2><p>O bot já está funcionando. Pode fechar esta página.</p>', false));
+        }
       }
       if (connection === 'close') {
         this.conectado = false;
@@ -121,6 +157,9 @@ export class WhatsApp {
         }
         const espera = Math.min(60_000, 2_000 * 2 ** this.tentativas++);
         this.log.warn(`Conexão caiu (código ${codigo ?? '?'}). Reconectando em ${Math.round(espera / 1000)}s...`);
+        if (this.tentativas === 4) {
+          this.log.warn('   Está difícil conectar: confira a internet, antivírus/firewall ou VPN do computador.');
+        }
         await esperar(espera);
         this.iniciar().catch((e) => this.log.error('Erro ao reconectar:', e));
       }

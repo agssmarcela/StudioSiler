@@ -2,3 +2,4 @@ node_modules/
 auth/
 data/
 *.tmp
+qrcode.html
