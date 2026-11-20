@@ -16,7 +16,7 @@ const DESIGN = String(base.servicos.findIndex((s) => s.id === 'design-sobrancelh
 const CLASSICO = String(base.servicos.findIndex((s) => s.id === 'volume-classico') + 1);
 
 function montar(inicioLocal = ['2026-11-18', '10:00']) {
-  const config = { ...base, numerosDona: [DONA], datasFechadas: [] };
+  const config = { ...base, numerosDona: [DONA], datasFechadas: [], lembreteHorasAntes: 24 };
   let agora = localParaEpoch(...inicioLocal, config.fusoHorario);
   const enviadas = [];
   const store = new Store(null);
